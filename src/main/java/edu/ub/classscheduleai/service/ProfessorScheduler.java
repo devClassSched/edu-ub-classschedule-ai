@@ -44,13 +44,14 @@ public class ProfessorScheduler {
 	 * @param semCourseList all courses in the semester
 	 * @return
 	 */
-	public boolean registerSchedule( List<User> profList,List<ScheduleDetail> courseList,List<ScheduleDetail> semCourseList) {
+	public User registerSchedule( List<User> profList,List<ScheduleDetail> courseList,List<ScheduleDetail> semCourseList) {
 		if(profList != null && profList.size() > 0 && courseList != null && courseList.size() > 0) {
 			Schedule sched = courseList.get(0).getSchedule();
 			profList = countAllocation(profList, semCourseList);
 			boolean noConflict = false;
 			for(User p : profList) {
 				noConflict = false;
+				
 				profSchedule = getProfSched(semCourseList,p);			
 				if(profSchedule != null && profSchedule.size() > 0) {
 					for(ScheduleDetail sd : courseList) {
@@ -66,13 +67,13 @@ public class ProfessorScheduler {
 					}
 				}
 				if(!noConflict) {
-					sched.setProfessor(p);	
-					schedService.save(sched);
-					return true;
+					//sched.setProfessor(p);	
+					//schedService.save(sched);
+					return p;
 				}
 			}
 		}
-		return false;		
+		return null;		
 	}
 	
 	private List<ScheduleDetail> getProfSched(List<ScheduleDetail> semCourseList,User prof){
@@ -81,7 +82,7 @@ public class ProfessorScheduler {
 			Schedule sched = sd.getSchedule();
 			if(sched != null) {
 				User prof1 = sched.getProfessor();
-				if(prof1.equals(prof)) {
+				if(prof1!= null && prof1.equals(prof)) {
 					profSchedList.add(sd);
 				}
 			}

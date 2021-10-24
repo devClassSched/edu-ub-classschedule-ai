@@ -34,23 +34,23 @@ public class ScheduleDetailServiceImpl implements BaseScheduleService<ScheduleDe
 
 	
 	public List<ScheduleDetail> findAllBySemester(Semester semester){
-		return mainRepo.findAllBySemesterId(semester.getId());
+		return mainRepo.findAllBySemesterId(semester);
 	}
 	
 	public List<ScheduleDetail> findAllBySemesterAndProfessor(Semester semester, User user){
-		return mainRepo.findAllBySemesterIdAndProfessorId(semester.getId(),user.getId());
+		return mainRepo.findAllBySemesterIdAndProfessorId(semester,user);
 	}
 	
 	public List<ScheduleDetail> findAllBySemesterAndClassroom(Semester semester, Classroom room){
-		return mainRepo.findAllBySemesterIdAndClassroomId(semester.getId(), room.getId());
+		return mainRepo.findAllBySemesterIdAndClassroomId(semester, room);
 	}
 	
 	public List<ScheduleDetail> findAllBySemesterAndCourse(Semester semester, Course course){
-		return mainRepo.findAllBySemesterIdAndCourseId(semester.getId(), course.getId());
+		return mainRepo.findAllBySemesterIdAndCourseId(semester, course);
 	}
 	
 	public List<Long> findSchedIdPerSemester(Semester semester){
-		return mainRepo.findAllDistinctSchedIdBySemesterId(semester.getId());
+		return mainRepo.findAllDistinctSchedIdBySemesterId(semester);
 	}
 	
 	@Transactional
@@ -59,8 +59,8 @@ public class ScheduleDetailServiceImpl implements BaseScheduleService<ScheduleDe
 	}
 	
 	@Transactional
-	public void deleteByScheduleID(List<Long> id) {
-		//mainRepo.deleteByScheduleID(id);
+	public void deleteByScheduleID(List<Schedule> toDelete) {
+		mainRepo.deleteBySchedule(toDelete);
 	}
 	
 	@Override

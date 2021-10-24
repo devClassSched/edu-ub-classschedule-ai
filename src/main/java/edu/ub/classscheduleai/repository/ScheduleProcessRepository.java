@@ -15,8 +15,9 @@ import edu.ub.classscheduleai.util.Status;
 @Repository
 public interface ScheduleProcessRepository extends JpaRepository<ScheduleProcess,Integer>{
 
-	@Query("SELECT ai FROM scheduleprocess ai where status in ?1")
-	ScheduleProcess findOpenProcess(List<Status> list);
+	@Query("SELECT ai FROM scheduleprocess ai join fetch ai.sem where status = 0")
+	ScheduleProcess findOpenProcess();
 	
-	
+	@Query("SELECT ai FROM scheduleprocess ai join fetch ai.sem where status in ?1")
+	ScheduleProcess findOtherProcess(List<Status> list);
 }

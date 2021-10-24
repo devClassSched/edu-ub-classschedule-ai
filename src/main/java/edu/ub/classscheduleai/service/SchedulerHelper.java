@@ -15,7 +15,7 @@ import edu.ub.classscheduleai.util.SortByTime;
 
 public class SchedulerHelper {
 
-	private static final LocalTime schoolEndTime = LocalTime.of(20, 0);
+	private static final LocalTime schoolEndTime = LocalTime.of(19, 0);
 	
 	/*
 	 * Find last class schedule in a list
@@ -30,7 +30,7 @@ public class SchedulerHelper {
 					return startTime;				
 			}			
 		}else {
-			startTime = LocalTime.of(7, 0);
+			startTime = LocalTime.of(6, 0);
 			return startTime;
 		}
 		return null;
@@ -50,16 +50,16 @@ public class SchedulerHelper {
 	/*
 	 * Find if Course is already have max 3hrs alloted for the day.
 	 */
-	public static boolean findMaxCourseHourPerDay(List<ScheduleDetail> source,int courseId) {
-		int totalHours = 0;
+	public static boolean findMaxCourseHourPerDay(List<ScheduleDetail> source,int courseId,double additionalHours) {
+		double totalHours = 0;
 		if(source != null && source.size() > 0 ) {
 			for(ScheduleDetail sd : source) {
 				if(sd.getSchedule().getCourse().getId() == courseId) {
-					totalHours += ChronoUnit.MINUTES.between(sd.getEndTime(), sd.getStartTime());
+					totalHours += ChronoUnit.MINUTES.between(sd.getStartTime(),sd.getEndTime());
 				}
 			}
 			if(totalHours > 0) {
-				return (totalHours/60) > 3.0;
+				return ((totalHours/60) + additionalHours) > 3.0;
 			}
 		}
 		return false;
@@ -124,7 +124,7 @@ public class SchedulerHelper {
 			Collections.sort(th,new SortByTime());
 			dayMap.put(Day.THURSDAY, th);
 			Collections.sort(f,new SortByTime());
-			dayMap.put(Day.FRIDAY, t);
+			dayMap.put(Day.FRIDAY, f);
 		}
 		return dayMap;
 	}
@@ -145,5 +145,12 @@ public class SchedulerHelper {
 			Collections.sort(tmpDays,new SortByTime());
 		}
 		return tmpDays;
+	}
+	
+	public static int concat() {
+	    return (int) ((Math.random() * (9 - 5)) + 5);
+	}
+	public static int concat(int val) {
+	    return (int) ((Math.random() * (val - 10)) + 10);
 	}
 }

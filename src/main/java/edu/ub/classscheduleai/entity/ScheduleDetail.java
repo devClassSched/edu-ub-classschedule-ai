@@ -14,10 +14,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.GenericGenerator;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import edu.ub.classscheduleai.util.Coursetype;
 import edu.ub.classscheduleai.util.Day;
+import edu.ub.classscheduleai.util.LocalTimeSerializer;
 
 @Entity(name="scheduledetail")
 @Table(name="scheduledetail")
@@ -40,12 +44,26 @@ public class ScheduleDetail {
 	@Enumerated(EnumType.ORDINAL)
 	private Day day;		
 
-	
+	@JsonSerialize(using = LocalTimeSerializer.class)
 	@Column(name = "start_time", columnDefinition = "TIME")
 	private LocalTime startTime;
 	
+	@JsonSerialize(using = LocalTimeSerializer.class)
 	@Column(name = "end_time", columnDefinition = "TIME")
 	private LocalTime endTime;
+	
+
+	@Enumerated(EnumType.ORDINAL)
+	private Coursetype coursetype;
+	
+	
+	public Coursetype getCoursetype() {
+		return coursetype;
+	}
+
+	public void setCoursetype(Coursetype coursetype) {
+		this.coursetype = coursetype;
+	}
 
 	public int getId() {
 		return id;
@@ -116,6 +134,16 @@ public class ScheduleDetail {
 	@Override
 	public int hashCode() {
 		return getClass().hashCode();
+	}
+	
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this)
+				.append(this.classroom.getCoursetype())
+				.append(this.classroom.getDescription())
+				.append(this.day)
+				.append(this.startTime)
+				.append(this.endTime).toString();
 	}
 }
 

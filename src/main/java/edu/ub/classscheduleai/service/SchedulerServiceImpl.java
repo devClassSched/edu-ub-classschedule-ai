@@ -48,50 +48,42 @@ public class SchedulerServiceImpl  implements SchedulerService{
 	CourseScheduler courseScheduler;
 	
 	@Transactional
-	public void generateSchedule(int semesterId) {
-		Optional<Semester> sem = this.getSemester(semesterId);
+	public void generateSchedule(ScheduleProcess sp) {
+		System.out.println(sp.getSem());
+		Optional<Semester> sem = semService.getById(sp.getSem().getId());
 		List<Course> courseList = new ArrayList<>();
 		List<User> profList = profService.getAllProf();
 		
 		if(sem.isPresent()) {
-			ScheduleProcess spList = schedProcessService.findAllBySemester(sem.get());
+			ScheduleProcess spList = sp;
 			courseScheduler.init();
 			if(spList != null) {
+				spList.setStatus(Status.STARTED);
+				schedProcessService.saveFlush(spList);
 				courseList = courseService.findAllNotCreatedBySemesterId(sem.get());
 				List<ScheduleDetail> currentList = schedDetailService.findAllBySemester(sem.get());
+				System.out.println(courseList.size());
 				for(Course c : courseList) {
 					try {
-						courseScheduler.registerCourse(c,sem.get());
-						
-						
-						if(courseScheduler.save()) {
-							List<User> trimmedUserList = profScheduler.getApplicableProf(profList, c.getCategory());
-							profScheduler.registerSchedule(trimmedUserList, courseScheduler.getSchedList(), currentList);
-							currentList.addAll(courseScheduler.getSchedList());
-							
-							spList.setStatus(Status.STARTED);
+						System.out.println("Processing "+c.getDescription());
+						courseScheduler.registerCourse(c,sem.get());	
+						List<User> trimmedUserList = profScheduler.getApplicableProf(profList, c.getCategory());
+						courseScheduler.registerProf(profScheduler.registerSchedule(trimmedUserList, courseScheduler.getSchedList(), currentList));						
+						if(courseScheduler.save()) {							
+							currentList.addAll(courseScheduler.getSchedList());														
 							spList.addCourseCompleted(1);
 							schedProcessService.saveFlush(spList);
 						}						
-					}catch(Exception e) {}
+					}catch(Exception e) { e.printStackTrace();}
 				}
 				spList.setStatus(Status.COMPLETED);
+				schedDetailService.saveAll(currentList);
 				schedProcessService.saveFlush(spList);
 			}
-		}		
+		}
 	}
 	
-	
-	public boolean clearSchedule(int semesterId) {
-		Optional<Semester> sem = this.getSemester(semesterId);
-		if(sem.isPresent()) {			
-			List<Long> tmp = schedDetailService.findSchedIdPerSemester(sem.get());	
-			schedDetailService.deleteByScheduleID(tmp);
-			return true;
-		}		
-		return false;
-	}
-	
+		
 	private List<ScheduleDetail> getAllSchedule(int semesterId){
 		Optional<Semester> sem = this.getSemester(semesterId);
 		if(sem.isPresent()) {

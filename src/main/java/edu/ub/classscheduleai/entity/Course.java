@@ -29,6 +29,11 @@ public class Course {
 	@Column(name="title")
 	private String description;
 	
+	@Column(name="section")
+	private String section;
+	
+
+
 	@ManyToOne(fetch = FetchType.LAZY)	
 	@JoinColumn(name="domain_value_id")
 	private DomainValue category;
@@ -48,6 +53,14 @@ public class Course {
 	private Classroom labRoom;
 	
 	public Course() {}
+	
+	public String getSection() {
+		return section;
+	}
+
+	public void setSection(String section) {
+		this.section = section;
+	}
 	
 	public DomainValue getCategory() {
 		return category;

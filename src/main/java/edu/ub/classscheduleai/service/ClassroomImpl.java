@@ -32,7 +32,7 @@ public class ClassroomImpl implements BaseScheduleService<Classroom>{
 				.collect(Collectors.toList());
 		
 		List<Classroom> finalList = new ArrayList<>();
-		for(Classroom fList : rooms) {
+		for(Classroom fList : filteredList) {
 			Set<DomainValue> catList = fList.getCategory();
 			boolean test = catList.stream().anyMatch(e -> e.equals(category));
 			if(test) {
@@ -44,6 +44,10 @@ public class ClassroomImpl implements BaseScheduleService<Classroom>{
 	}
 	public List<Classroom> findAllClassroomByCategoryAndType(DomainValue category,Coursetype type){		
 		return repo.findAllByCategoryAndCoursetype(category.getId(),type);
+	}
+	
+	public List<Classroom> findAllClassroomByType(Coursetype type){		
+		return repo.findAllByCoursetype(type);
 	}
 	
 	@Override

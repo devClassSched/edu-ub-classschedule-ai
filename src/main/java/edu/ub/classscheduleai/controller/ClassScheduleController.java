@@ -28,11 +28,13 @@ import edu.ub.classscheduleai.service.ScheduleProcessImpl;
 import edu.ub.classscheduleai.service.SchedulerServiceImpl;
 import edu.ub.classscheduleai.service.SemesterImpl;
 import edu.ub.classscheduleai.service.UserImpl;
+import edu.ub.classscheduleai.util.Coursetype;
 import edu.ub.classscheduleai.util.Status;
 import edu.ub.classscheduleai.entity.Classroom;
 import edu.ub.classscheduleai.entity.Course;
 import edu.ub.classscheduleai.entity.DomainObject;
 import edu.ub.classscheduleai.entity.DomainValue;
+import edu.ub.classscheduleai.entity.Filter;
 import edu.ub.classscheduleai.entity.Schedule;
 import edu.ub.classscheduleai.entity.ScheduleDetail;
 import edu.ub.classscheduleai.entity.ScheduleProcess;
@@ -77,6 +79,17 @@ public class ClassScheduleController {
 	@RequestMapping(value = "/classroom", method = RequestMethod.GET)
 	public List<Classroom> getAllClassroom() {
 	    return roomService.getAll();
+	}
+		
+	
+	@RequestMapping(value = "/classroom/lecture", method = RequestMethod.GET)
+	public List<Classroom> getAllLectureClassroom() {
+	    return roomService.findAllClassroomByType(Coursetype.LECTURE);
+	}
+	
+	@RequestMapping(value = "/classroom/lab", method = RequestMethod.GET)
+	public List<Classroom> getAllLabClassroom() {
+	    return roomService.findAllClassroomByType(Coursetype.LABORATORY);
 	}
 	
 	@GetMapping(value = "/classroom/{id}")
@@ -142,6 +155,10 @@ public class ClassScheduleController {
 	@PostMapping("/user")
 	public User saveUser(@RequestBody User user) {
 		return userService.save(user);
+	}
+	@RequestMapping(value = "/user/professor", method = RequestMethod.GET)
+	public List<User> getAllProf() {
+	    return userService.getAllProf();
 	}
 	
 	@RequestMapping(value = "/domainObject", method = RequestMethod.GET)
@@ -234,10 +251,13 @@ public class ClassScheduleController {
 		return schedService.save(obj);
 	}
 	
+	
+	
 	@RequestMapping(value = "/scheduleDetail", method = RequestMethod.GET)
 	public List<ScheduleDetail> getAllScheduleDetail() {
 	    return schedDetailService.getAll();
 	}
+	
 	
 	@GetMapping(value = "/scheduleDetail/{semesterId}")
 	public List<ScheduleDetail> getScheduleDetailBySemester(@PathVariable String semesterId) {
@@ -250,6 +270,14 @@ public class ClassScheduleController {
 			}
 		}catch(Exception e) {}
 		
+		return schedList;
+	}
+	
+	@PostMapping(value = "/scheduleDetail/filter/prof")
+	public List<ScheduleDetail> getScheduleDetailBySemester(@RequestBody Filter obj) {
+		
+		List<ScheduleDetail> schedList = new ArrayList<>();
+		System.out.println(obj);		
 		return schedList;
 	}
 	
@@ -273,9 +301,11 @@ public class ClassScheduleController {
 		
 		List<ScheduleDetail> schedList = new ArrayList<>();
 		try {
+			System.out.println("Get by Prof:"+semesterId + " "+profId);
 			Optional<Semester> sem = semService.getById(Integer.parseInt(semesterId));
 			Optional<User> user = userService.getById(Integer.parseInt(profId));
 			if(sem.isPresent() && user.isPresent()) {
+				
 				schedList =  schedDetailService.findAllBySemesterAndProfessor(sem.get(),user.get());			
 			}
 		}catch(Exception e) {}
@@ -285,9 +315,9 @@ public class ClassScheduleController {
 	
 	@GetMapping(value = "/scheduleDetail/{semesterId}/classroom/{roomId}")
 	public List<ScheduleDetail> getScheduleDetailBySemesterAndRoom(@PathVariable String semesterId, @PathVariable String roomId) {
-		
 		List<ScheduleDetail> schedList = new ArrayList<>();
 		try {
+			System.out.println("Get by Room:"+semesterId + " "+roomId);
 			Optional<Semester> sem = semService.getById(Integer.parseInt(semesterId));
 			Optional<Classroom> room = roomService.getById(Integer.parseInt(roomId));
 			if(sem.isPresent() && room.isPresent()) {
@@ -298,29 +328,6 @@ public class ClassScheduleController {
 		return schedList;
 	}
 	
-	/*@PostMapping("/scheduler/{semesterId}")
-	public String schedule(@RequestBody ScheduleProcess obj) {
-		List<ScheduleDetail> schedList = new ArrayList<>();
-		
-		try {
-			if(obj!=null && obj.ge)
-			Optional<Semester> sem = semService.getById(Integer.parseInt(semesterId));
-			if(!scheduleProcService.findExistingProcess()) {
-				if(sem.isPresent()) {
-					List<Course> course = courseService.getAll();
-					ScheduleProcess sp = new ScheduleProcess();
-					sp.setStatus(Status.CREATED);
-					sp.setCourseNotCompleted(course.size() - 1);
-					sp.setCompletedCourses(0);
-					sp.setTotalCourses(course.size() - 1);
-					scheduleProcService.save(sp);
-					return "Scheduler process saved for "+sem.get().getDescription()+".";
-				}
-			}else {return "Existing process still not complete.";}
-		}catch(Exception e) {e.printStackTrace();}
-		return "General error encountered.";
-		
-	}*/
 	@RequestMapping(value = "/scheduler", method = RequestMethod.GET)
 	public List<ScheduleProcess> getAllScheduler() {
 	    return this.scheduleProcService.getAll();
@@ -329,5 +336,11 @@ public class ClassScheduleController {
 	@PostMapping("/scheduler")
 	public ScheduleProcess saveUser(@RequestBody ScheduleProcess obj) {
 		return this.scheduleProcService.save(obj);
+	}
+	
+	@PostMapping("/scheduler/process")
+	public ScheduleProcess deleteSchedule(@RequestBody ScheduleProcess obj) {
+		this.scheduleProcService.delete(obj);
+		return new ScheduleProcess();
 	}
 }

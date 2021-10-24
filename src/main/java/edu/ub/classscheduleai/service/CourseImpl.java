@@ -17,7 +17,7 @@ public class CourseImpl implements BaseScheduleService<Course> {
 	CourseRepository repo;
 	
 	public List<Course> findAllNotCreatedBySemesterId(Semester sem) {
-		return repo.findAllNotCreatedBySemesterId(sem.getId());
+		return repo.findAllNotCreatedBySemesterId(sem);
 	}
 	@Override
 	public List<Course> getAll() {
@@ -32,6 +32,10 @@ public class CourseImpl implements BaseScheduleService<Course> {
 	@Override
 	public Course save(Course obj) {
 		return repo.save(obj);
+	}
+	
+	public void generate() {
+		 repo.deleteAll();
 	}
 
 }

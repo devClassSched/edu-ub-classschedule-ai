@@ -13,6 +13,6 @@ public class TimerLog {
 	
 	public void end(String msg) {
 		LocalTime tmp = LocalTime.now();
-		System.out.println("PROCESS TIME: "+ msg +" : "+ ChronoUnit.MINUTES.between(startTime, tmp));
+		System.out.println("PROCESS TIME: "+ msg +" : "+ ChronoUnit.SECONDS.between(tmp,startTime) +" seconds.");
 	}
 }

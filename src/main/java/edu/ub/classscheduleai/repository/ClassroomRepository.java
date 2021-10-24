@@ -20,4 +20,6 @@ public interface ClassroomRepository extends JpaRepository<Classroom,Integer>{
 	
 	//@Query("SELECT s FROM classroom s where s.catregroy =:id and s.coursetype =:type")
 	List<Classroom> findAllByCategoryAndCoursetype(long id,Coursetype type);
+	
+	List<Classroom> findAllByCoursetype(Coursetype type);
 }
