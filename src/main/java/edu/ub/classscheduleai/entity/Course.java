@@ -52,6 +52,10 @@ public class Course {
 	@JoinColumn(name="lab_room", nullable=true)	
 	private Classroom labRoom;
 	
+	@ManyToOne(fetch = FetchType.LAZY)	
+	@JoinColumn(name="semester_id")
+	private Semester semester;
+	
 	public Course() {}
 	
 	public String getSection() {
@@ -134,6 +138,14 @@ public class Course {
 
 	public void setLabRoom(Classroom labRoom) {
 		this.labRoom = labRoom;
+	}
+
+	public Semester getSemester() {
+		return semester;
+	}
+
+	public void setSemester(Semester semester) {
+		this.semester = semester;
 	}
 	
 	

@@ -30,7 +30,7 @@ public class SchedulerHelper {
 					return startTime;				
 			}			
 		}else {
-			startTime = LocalTime.of(6, 0);
+			startTime = LocalTime.of(7, 0);
 			return startTime;
 		}
 		return null;

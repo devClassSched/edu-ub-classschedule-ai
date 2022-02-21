@@ -29,7 +29,7 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     @Column(name = "id", updatable = false, nullable = false)
-	private Integer id;
+	private int id;
 	
 	@Column(name="name")
 	private String name;
@@ -56,12 +56,7 @@ public class User {
 
 	public User() {}
 	
-	@Override
-	public boolean equals(Object o) {
-		if(this == o) return true;
-		if(!(o instanceof User)) return false;
-		return id != null && id.equals(((User) o).getId());
-	}
+	
 	
 	@Override
 	public int hashCode() {
@@ -72,7 +67,7 @@ public class User {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -131,4 +126,11 @@ public class User {
 	public void addCurrentcount(int add) {
 		this.currentcount += add;
 	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", name=" + name + ", password=" + password + ", specialization=" + specialization
+				+ ", role=" + role + ", allocatedHours=" + allocatedHours + ", currentcount=" + currentcount + "]";
+	}
+	
 }
