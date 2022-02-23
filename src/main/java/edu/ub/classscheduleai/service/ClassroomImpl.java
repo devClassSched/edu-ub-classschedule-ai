@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import edu.ub.classscheduleai.entity.Classroom;
 import edu.ub.classscheduleai.entity.DomainValue;
+import edu.ub.classscheduleai.entity.User;
 import edu.ub.classscheduleai.repository.ClassroomRepository;
 import edu.ub.classscheduleai.util.Coursetype;
 
@@ -49,7 +50,14 @@ public class ClassroomImpl implements BaseScheduleService<Classroom>{
 	public List<Classroom> findAllClassroomByType(Coursetype type){		
 		return repo.findAllByCoursetype(type);
 	}
+
+	public List<Classroom> findIfCanDelete(Classroom c) {
+		return repo.findIfCanDelete(c.getId());
+	}
 	
+	public void classroomDelete(Classroom c) {
+		repo.deleteById(c.getId());
+	}
 	@Override
 	public List<Classroom> getAll() {
 		return repo.findAll();		

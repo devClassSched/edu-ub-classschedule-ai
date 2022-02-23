@@ -92,7 +92,7 @@ public class ProfessorScheduler {
 	//Will sort professors based on current allocated subjects
 	private List<User> countAllocation(List<User> profList, List<ScheduleDetail> semCourseList){
 		//reset all to 0 hours
-		profList.forEach(e -> e.setAllocatedHours(0));
+		profList.forEach(e -> e.setCurrentcount(0));
 		
 		for(ScheduleDetail sd: semCourseList) {
 			if(sd != null) {

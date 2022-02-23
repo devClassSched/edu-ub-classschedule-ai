@@ -81,7 +81,6 @@ public class ClassScheduleController {
 	    return roomService.getAll();
 	}
 		
-	
 	@RequestMapping(value = "/classroom/lecture", method = RequestMethod.GET)
 	public List<Classroom> getAllLectureClassroom() {
 	    return roomService.findAllClassroomByType(Coursetype.LECTURE);
@@ -110,6 +109,23 @@ public class ClassScheduleController {
 		return roomService.save(room);
 	}
 	
+	
+	@PostMapping("/classroomDelete")
+	public String classroomDelete(@RequestBody Classroom room) {
+		try {
+			roomService.classroomDelete(room);
+		}catch(Exception e){
+			e.printStackTrace();
+			return "false";
+		}
+		return "true";	
+	}
+	
+	@PostMapping("/classroomCanDelete")
+	public List<Classroom> canDeleteClassroom(@RequestBody Classroom room) {
+		return roomService.findIfCanDelete(room);
+	}
+	
 	@RequestMapping(value = "/course", method = RequestMethod.GET)
 	public List<Course> getAllCourse() {
 	    return courseService.getAll();
@@ -126,6 +142,21 @@ public class ClassScheduleController {
 		}catch(Exception e) {}
 		
 		return new Course();
+	}
+	
+	@PostMapping("/courseCanDelete")
+	public List<Course> canDeleteCourse(@RequestBody Course course) {
+		return courseService.findIfCanDelete(course);
+	}
+	@PostMapping("/courseDelete")
+	public String courseDelete(@RequestBody Course course) {
+		try {
+			courseService.courseDelete(course);
+		}catch(Exception e){
+			e.printStackTrace();
+			return "false";
+		}
+		return "true";		
 	}
 	
 	@PostMapping("/course")
@@ -150,6 +181,23 @@ public class ClassScheduleController {
 		}catch(Exception e) {}
 		
 		return new User();
+	}
+	
+	@PostMapping("/userCanDelete")
+	public List<User> canDeleteUser(@RequestBody User user) {
+		return userService.findIfCanDelete(user);
+	}
+	
+	@PostMapping("/userDelete")
+	public String userDelete(@RequestBody User user) {
+		try {
+			userService.userDelete(user);
+		}catch(Exception e){
+			e.printStackTrace();
+			return "false";
+		}
+		return "true";				
+		
 	}
 	
 	@PostMapping("/user")

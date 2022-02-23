@@ -60,7 +60,7 @@ public class SchedulerServiceImpl  implements SchedulerService{
 			if(spList != null) {
 				spList.setStatus(Status.STARTED);
 				schedProcessService.saveFlush(spList);
-				courseList = courseService.findAllNotCreatedBySemesterId(sem.get());
+				courseList = courseService.findAllCourseForSemester(sem.get());
 				List<ScheduleDetail> currentList = schedDetailService.findAllBySemester(sem.get());
 				System.out.println(courseList.size());
 				for(Course c : courseList) {

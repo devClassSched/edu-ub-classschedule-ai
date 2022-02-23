@@ -46,7 +46,14 @@ CREATE TABLE IF NOT EXISTS `csdb`.`courses` (
   `lecture_room` INT NULL,
   `lab_room` INT NULL,
   `section` VARCHAR(45) NULL,
-  PRIMARY KEY (`id`))
+  `semester_id` INT NULL,
+  PRIMARY KEY (`id`),
+ INDEX `fk_course_semester_idx` (`semester_id` ASC) VISIBLE,
+  CONSTRAINT `ffk_course_semester`
+    FOREIGN KEY (`semester_id`)
+    REFERENCES `csdb`.`semester` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
@@ -176,7 +183,7 @@ CREATE TABLE IF NOT EXISTS `csdb`.`user` (
   `name` VARCHAR(150) NULL,
   `password` VARCHAR(45) NULL,
   `role` INT NULL,
-  `allocated_hours` INT NULL DEFAULT 0,
+  `allocated_hours` INT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
@@ -209,3 +216,239 @@ ENGINE = InnoDB;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- DOMAIN OBJECT
+INSERT INTO `csdb`.`domainobject`(`description`)VALUES('CATEGORY');
+
+-- DOMAIN VALUE
+INSERT INTO `csdb`.`domainvalue`(`description`,`short_description`,`domain_object_id`)VALUES ('GENERAL','Math',1);
+INSERT INTO `csdb`.`domainvalue`(`description`,`short_description`,`domain_object_id`)VALUES ('GENERAL','Sciences (Chem, Physics, Bio)',1);
+INSERT INTO `csdb`.`domainvalue`(`description`,`short_description`,`domain_object_id`)VALUES ('GENERAL','Education (English, Filipino etc.)',1);
+INSERT INTO `csdb`.`domainvalue`(`description`,`short_description`,`domain_object_id`)VALUES ('GENERAL','Drafting',1);
+INSERT INTO `csdb`.`domainvalue`(`description`,`short_description`,`domain_object_id`)VALUES ('GENERAL','Basic Programming',1);
+INSERT INTO `csdb`.`domainvalue`(`description`,`short_description`,`domain_object_id`)VALUES ('GENERAL','Social Science',1);
+INSERT INTO `csdb`.`domainvalue`(`description`,`short_description`,`domain_object_id`)VALUES ('ARTS','Architecture',1);
+INSERT INTO `csdb`.`domainvalue`(`description`,`short_description`,`domain_object_id`)VALUES ('ARTS','Fine Arts',1);
+INSERT INTO `csdb`.`domainvalue`(`description`,`short_description`,`domain_object_id`)VALUES ('ARTS','Interior Design',1);
+INSERT INTO `csdb`.`domainvalue`(`description`,`short_description`,`domain_object_id`)VALUES ('ENGINEERING','Chemical Eng',1);
+INSERT INTO `csdb`.`domainvalue`(`description`,`short_description`,`domain_object_id`)VALUES ('ENGINEERING','Civil Eng',1);
+INSERT INTO `csdb`.`domainvalue`(`description`,`short_description`,`domain_object_id`)VALUES ('ENGINEERING','Computer Eng',1);
+INSERT INTO `csdb`.`domainvalue`(`description`,`short_description`,`domain_object_id`)VALUES ('ENGINEERING','Electrical Eng',1);
+INSERT INTO `csdb`.`domainvalue`(`description`,`short_description`,`domain_object_id`)VALUES ('ENGINEERING','Electronics and Communications Eng',1);
+INSERT INTO `csdb`.`domainvalue`(`description`,`short_description`,`domain_object_id`)VALUES ('ENGINEERING','Food Eng',1);
+INSERT INTO `csdb`.`domainvalue`(`description`,`short_description`,`domain_object_id`)VALUES ('ENGINEERING','Industrial Eng',1);
+INSERT INTO `csdb`.`domainvalue`(`description`,`short_description`,`domain_object_id`)VALUES ('ENGINEERING','Instrumentation and Control Eng',1);
+INSERT INTO `csdb`.`domainvalue`(`description`,`short_description`,`domain_object_id`)VALUES ('ENGINEERING','Mechanical Eng',1);
+INSERT INTO `csdb`.`domainvalue`(`description`,`short_description`,`domain_object_id`)VALUES ('ENGINEERING','Mecatronics Eng',1);
+INSERT INTO `csdb`.`domainvalue`(`description`,`short_description`,`domain_object_id`)VALUES ('ENGINEERING','Petroleum Eng',1);
+INSERT INTO `csdb`.`domainvalue`(`description`,`short_description`,`domain_object_id`)VALUES ('ENGINEERING','Sanitary Eng',1);
+
+
+-- CLASSROOM
+INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('Chemical Engineering','Laboratory I',1);
+INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('Chemical Engineering','Laboratory II',1);
+INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('Chemical Engineering','Laboratory III',1);
+INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('Chemical Engineering','SFIHM',1);
+INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('Chemical Engineering','FIC',1);
+INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('Chemical Engineering','UOPS Laboratory',1);
+INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('Civil Engineering','Environmental Lab',1);
+INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('Civil Engineering','Computer Lab',1);
+INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('Civil Engineering','Soil and Construction Materials Testing Lab',1);
+INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('Civil Engineering','Hydraulics Lab',1);
+INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('Electrical and Computer Engineering','Circuits Laboratory',1);
+INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('Electrical and Computer Engineering','Machines Laboratory',1);
+INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('Electrical and Computer Engineering','Computer Engineering / Hardware Laboratory',1);
+INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('Industrial Engineering','Methods Engineering and Ergonomics Lab',1);
+INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('Mechanical and Petroleum Engineering','Boiler Laboratory',1);
+INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('Mechanical and Petroleum Engineering','Geology Laboratory',1);
+INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('Architecture, Interior Design and Fine Arts','Gallery',1);
+INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('General Room','Room 101',0);
+INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('General Room','Room 102',0);
+INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('CICS Building','Software Laboratory',1);
+INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('CICS Building','Room 501',0);
+INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('CICS Building','Room 502',0);
+INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('RGR Building','Room 101',0);
+INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('RGR Building','Room 102',0);
+INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('Drafting Room','DR Room 1',1);
+INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('CICS Building','CICSO Lab',1);
+INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('CEAFA Building','ECE Lab',1);
+INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('CEAFA Building','ICE Lab',1);
+
+-- room type
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(10,1);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(2,1);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(10,2);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(10,3);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(10,4);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(10,5);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(10,6);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(11,7);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(21,7);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(11,8);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(11,9);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(11,10);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(13,11);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(12,12);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(12,13);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(5,13);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(16,14);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(18,15);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(20,15);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(18,16);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(7,17);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(8,17);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(9,17);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(1,18);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(2,18);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(3,18);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(6,18);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(1,19);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(2,19);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(3,19);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(6,19);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(12,20);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(5,20);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(12,21);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(21,21);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(12,22);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(11,23);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(11,24);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(4,25);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(12,26);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(14,27);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(17,28);
+INSERT INTO `csdb`.`roomtype`(`domainvalue_id`,`classroom_id`)VALUES(19,28);
+
+
+-- SEMESTER
+INSERT INTO `csdb`.`semester`(`description`)VALUES('1st Semester 2021-2022');
+INSERT INTO `csdb`.`semester`(`description`)VALUES('2nd Semester 2021-2022');
+INSERT INTO `csdb`.`semester`(`description`)VALUES('Summer 2021-2022');
+
+-- USER
+INSERT INTO `csdb`.`user`(`name`,`password`,`role`,`allocated_hours`)VALUES('CpE Prof 1','abc123',1,20);
+INSERT INTO `csdb`.`user`(`name`,`password`,`role`,`allocated_hours`)VALUES('CpE Prof 2','abc123',1,20);
+INSERT INTO `csdb`.`user`(`name`,`password`,`role`,`allocated_hours`)VALUES('CpE Prof 3','abc123',1,15);
+INSERT INTO `csdb`.`user`(`name`,`password`,`role`,`allocated_hours`)VALUES('CpE Prof 4','abc123',1,30);
+INSERT INTO `csdb`.`user`(`name`,`password`,`role`,`allocated_hours`)VALUES('CpE Prof 5','abc123',1,20);
+INSERT INTO `csdb`.`user`(`name`,`password`,`role`,`allocated_hours`)VALUES('CpE Prof 6','abc123',1,20);
+INSERT INTO `csdb`.`user`(`name`,`password`,`role`,`allocated_hours`)VALUES('Math Prof 1','abc123',1,20);
+INSERT INTO `csdb`.`user`(`name`,`password`,`role`,`allocated_hours`)VALUES('Math Prof 2','abc123',1,20);
+INSERT INTO `csdb`.`user`(`name`,`password`,`role`,`allocated_hours`)VALUES('ECE Prof 1','abc123',1,20);
+INSERT INTO `csdb`.`user`(`name`,`password`,`role`,`allocated_hours`)VALUES('EE Prof 1','abc123',1,25);
+INSERT INTO `csdb`.`user`(`name`,`password`,`role`,`allocated_hours`)VALUES('CE Prof 1','abc123',1,20);
+INSERT INTO `csdb`.`user`(`name`,`password`,`role`,`allocated_hours`)VALUES('IE Prof 1','abc123',1,20);
+INSERT INTO `csdb`.`user`(`name`,`password`,`role`,`allocated_hours`)VALUES('GenEd Prof 1','abc123',1,30);
+INSERT INTO `csdb`.`user`(`name`,`password`,`role`,`allocated_hours`)VALUES('GenEd Prof 2','abc123',1,30);
+
+-- USER TYPE
+INSERT INTO `csdb`.`usertype`(`user_id`,`domainvalue_id`)VALUES(1,12);
+INSERT INTO `csdb`.`usertype`(`user_id`,`domainvalue_id`)VALUES(2,12);
+INSERT INTO `csdb`.`usertype`(`user_id`,`domainvalue_id`)VALUES(3,12);
+INSERT INTO `csdb`.`usertype`(`user_id`,`domainvalue_id`)VALUES(3,5);
+INSERT INTO `csdb`.`usertype`(`user_id`,`domainvalue_id`)VALUES(4,5);
+INSERT INTO `csdb`.`usertype`(`user_id`,`domainvalue_id`)VALUES(4,12);
+INSERT INTO `csdb`.`usertype`(`user_id`,`domainvalue_id`)VALUES(5,1);
+INSERT INTO `csdb`.`usertype`(`user_id`,`domainvalue_id`)VALUES(5,12);
+INSERT INTO `csdb`.`usertype`(`user_id`,`domainvalue_id`)VALUES(6,12);
+INSERT INTO `csdb`.`usertype`(`user_id`,`domainvalue_id`)VALUES(7,1);
+INSERT INTO `csdb`.`usertype`(`user_id`,`domainvalue_id`)VALUES(8,1);
+INSERT INTO `csdb`.`usertype`(`user_id`,`domainvalue_id`)VALUES(9,14);
+INSERT INTO `csdb`.`usertype`(`user_id`,`domainvalue_id`)VALUES(9,17);
+INSERT INTO `csdb`.`usertype`(`user_id`,`domainvalue_id`)VALUES(10,13);
+INSERT INTO `csdb`.`usertype`(`user_id`,`domainvalue_id`)VALUES(11,11);
+INSERT INTO `csdb`.`usertype`(`user_id`,`domainvalue_id`)VALUES(11,21);
+INSERT INTO `csdb`.`usertype`(`user_id`,`domainvalue_id`)VALUES(12,16);
+INSERT INTO `csdb`.`usertype`(`user_id`,`domainvalue_id`)VALUES(13,2);
+INSERT INTO `csdb`.`usertype`(`user_id`,`domainvalue_id`)VALUES(13,3);
+INSERT INTO `csdb`.`usertype`(`user_id`,`domainvalue_id`)VALUES(13,4);
+INSERT INTO `csdb`.`usertype`(`user_id`,`domainvalue_id`)VALUES(14,2);
+INSERT INTO `csdb`.`usertype`(`user_id`,`domainvalue_id`)VALUES(14,3);
+INSERT INTO `csdb`.`usertype`(`user_id`,`domainvalue_id`)VALUES(14,6);
+
+-- COURSES 1st Sem
+
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('Chem 102','General Chemistry',2,3,3,null,null,'CpE 1101','1');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('Math 104','Advanced Algebra',1,5,0,null,null,'CpE 1101','1');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('Math 108','Plane and Spherical Trigonometry',1,5,0,null,null,'CpE 1101','1');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('Eng 101','Advanced Grammar and Composition',3,3,0,null,null,'CpE 1101','1');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('Fil 101','Komunikasyon sa Akademikong Filipino',3,3,0,null,null,'CpE 1101','1');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('Hum 101','Introduction to Humanities: Art Appreciation',3,3,0,null,null,'CpE 1101','1');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('SS 101','General Psychology',6,3,0,null,null,'CpE 1101','1');
+
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('CAD 201','Computer Aided Drafting',5,0,3,null,13,'CpE 2101','1');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('Math 115','Integral Calculus',1,5,0,null,null,'CpE 2101','1');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('Phy 106','Physics 1',2,4,3,null,null,'CpE 2101','1');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('Eng 106','Technical Communication',3,3,0,null,null,'CpE 2101','1');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('SS 103','Society and Culture with Responsible Parenthood',6,3,0,null,null,'CpE 2101','1');
+
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('CpE 301','Discrete Mathematics',12,3,0,null,null,'CpE 3101','1');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('CpE 302','Computer Hardware Fundamentals',12,0,3,null,13,'CpE 3101','1');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('CpE 303','Data Structures and Algorithm Analysis',12,3,3,null,20,'CpE 3101','1');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('ECE 301','Electronics Devices and Circuits',14,3,3,null,27,'CpE 3101','1');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('EE 301','Electrical Circuits 1',13,3,3,null,11,'CpE 3101','1');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('Math 120','Differential Equations',1,3,0,null,null,'CpE 3101','1');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('IE 307','Engineering Economy',16,3,0,null,null,'CpE 3101','1');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('Mech 301','Statics of Rigid Bodies',11,3,0,null,null,'CpE 3101','1');
+
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('CpE 407','Computer System Organization with Assembly Language Programming',12,3,3,null,13,'CpE 4101','1');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('CpE 408','Engineering Ethics and Computer Laws',12,3,0,null,null,'CpE 4101','1');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('CpE 409','Advanced Logic Circuits',12,3,3,null,13,'CpE 4101','1');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('CpEE 401','CpE Track Elective 1',12,3,0,null,null,'CpE 4101','1');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('CS 307','Object-Oriented Programming',12,2,3,null,12,'CpE 4101','1');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('ECE 428','Digital Signal Processing',12,3,3,null,27,'CpE 4101','1');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('ECE 429','Data Communications with CCNA 1',14,2,3,null,26,'CpE 4101','1');
+
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('OJT 500','Internship Training',12,10,0,13,null,'CpE 5101','1');
+
+-- COURSES 2nd Sem
+
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('Chem 103','Chemistry Calculation with Organic Chemistry',2,3,3,null,null,'CpE 1201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('Draw 101','Engineering Drawing',4,0,3,null,25,'CpE 1201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('Math 109','Solid Mensuration',1,3,0,null,null,'CpE 1201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('Math 110','Analytic Geometry',1,3,0,null,null,'CpE 1201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('Eng 102','Study and Thinking Skills',3,3,0,null,null,'CpE 1201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('Fil 102','Pagbasa at Pagsulat Tungo sa Pananaliksik',3,3,0,null,null,'CpE 1201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('Hum 102','Introduction to Philosophy',6,3,0,null,null,'CpE 1201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('SS 102','Philippine History',6,3,0,null,null,'CpE 1201','2');
+
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('Comp 201','Computer Fundamentals and Programming',5,2,3,null,20,'CpE 2201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('Phy 107','Physics 2',2,4,3,null,null,'CpE 2201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('Hum 104','Logic',3,3,0,null,null,'CpE 2201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('SS 104','Life and Works of Rizal',6,3,0,null,null,'CpE 2201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('SS 106','Politics and Governance with Philippine Constitution',6,3,0,null,null,'CpE 2201','2');
+
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('CpE 304','Logic Circuits and Switching Theory',12,3,3,null,20,'CpE 3201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('CpE 305','Advanced Engineering Mathemathics for CpE',12,3,0,null,null,'CpE 3201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('CpE 306','Computer Engineering Drafting and Design',12,0,3,null,13,'CpE 3201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('ECE 303','Electronic Circuit Analysis and Design',14,3,3,null,27,'CpE 3201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('EE 305','Electrical Circuits 2',13,3,3,null,11,'CpE 3201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('EnE 301','Environmental Engineering',21,2,0,null,null,'CpE 3201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('IE 309','Safety Management',16,1,0,null,null,'CpE 3201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('Mech 302','Dynamics of Rigid Bodies',11,2,0,null,null,'CpE 3201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('Mech 303','Mechanics of Deformable Bodies',11,3,0,null,null,'CpE 3201','2');
+
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('CpE 410','Software Engineering',12,3,0,null,null,'CpE 4201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('CpE 411','Operating Systems',12,3,3,null,12,'CpE 4201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('CpE 412','Microprocessor Systems',12,3,3,null,12,'CpE 4201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('CpE 413','Computer Networks 1 with CCNA 2',12,2,3,null,26,'CpE 4201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('CpE 414','Computer Engineering Design Project 1',12,3,0,null,null,'CpE 4201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('CpEE 402','CpE Track Elective 2',12,3,0,null,null,'CpE 4201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('ICE 421','Instrumentation and Control Systems',12,3,3,null,28,'CpE 4201','2');
+
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('CpE 515','Computer System Architecture',12,3,3,null,12,'CpE 5201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('CpE 516','System Analysis and Design',12,2,3,null,20,'CpE 5201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('CpE 517','Computer Networks 2 with CCNA 3 and CCNA 4',12,3,3,null,26,'CpE 5201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('CpE 518','CpE Seminars and Field Trips',12,0,6,null,13,'CpE 5201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('CpE 519','Computer Engineering Practice with Comprehensive Examination',12,3,0,null,null,'CpE 5201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('CpE 520','Computer Engineering Design Project 2',12,3,0,null,null,'CpE 5201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('CpEE 503','CpE Track Elective 3',12,3,0,null,null,'CpE 5201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('IE 530','Engineering Management',16,3,0,null,null,'CpE 5201','2');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('IE 532','Technopreneurship',16,3,0,null,null,'CpE 5201','2');
+
+-- COURSES Summer
+
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('Math 114','Differential Calculus',1,5,0,null,null,'CpE 1301','3');
+
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('ECE 323','Fundamentals of Communcation Systems',14,3,0,null,null,'CpE 3301','3');
+INSERT INTO `csdb`.`courses`(`name`,`title`,`domain_value_id`,`lecture_hours`,`lab_hours`,`lecture_room`,`lab_room`,`section`,`semester_id`)VALUES('Math 121','Probability and Statistics',1,3,0,null,null,'CpE 3301','3');

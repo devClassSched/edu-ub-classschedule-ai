@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.ub.classscheduleai.entity.Classroom;
 import edu.ub.classscheduleai.entity.Course;
 import edu.ub.classscheduleai.entity.Semester;
 import edu.ub.classscheduleai.repository.CourseRepository;
@@ -16,8 +17,16 @@ public class CourseImpl implements BaseScheduleService<Course> {
 	@Autowired
 	CourseRepository repo;
 	
-	public List<Course> findAllNotCreatedBySemesterId(Semester sem) {
-		return repo.findAllNotCreatedBySemesterId(sem);
+	public List<Course> findAllCourseForSemester(Semester sem) {
+		return repo.findAllCourseForSemester(sem);
+	}
+	
+	public List<Course> findIfCanDelete(Course c) {
+		return repo.findIfCanDelete(c.getId());
+	}
+	
+	public void courseDelete(Course c) {
+		repo.deleteById(c.getId());
 	}
 	@Override
 	public List<Course> getAll() {
