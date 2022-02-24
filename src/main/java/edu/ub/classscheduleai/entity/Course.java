@@ -45,11 +45,11 @@ public class Course {
 	private int labHours;
 	
 	@ManyToOne(fetch = FetchType.LAZY)	
-	@JoinColumn(name="lecture_room", nullable=true)
+	@JoinColumn(columnDefinition="integer", name="lecture_room")
 	private Classroom lectureRoom;
 	
 	@ManyToOne(fetch = FetchType.LAZY)	
-	@JoinColumn(name="lab_room", nullable=true)	
+	@JoinColumn(columnDefinition="integer", name="lab_room")	
 	private Classroom labRoom;
 	
 	@ManyToOne(fetch = FetchType.LAZY)	

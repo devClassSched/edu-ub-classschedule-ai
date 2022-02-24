@@ -121,7 +121,7 @@ public class CourseScheduler {
 		//if has lecture hours
 		//find if there is defualt lecture room		
 		if(this.course.getLectureHours() > 0) {
-			if(this.course.getLectureRoom() != null) {
+			if(this.course.getLectureRoom() != null  && !this.course.getLectureRoom().getDescription().equals("NA")) {
 				this.lectureRooms.add(this.course.getLectureRoom());
 				System.out.println("Has default lecture room: "+this.course.getLectureRoom().getDescription());
 			}else {
@@ -137,7 +137,7 @@ public class CourseScheduler {
 		//if has lecture hours
 		//find if there is defualt lecture room
 		if(this.course.getLabHours() > 0) {
-			if(this.course.getLabRoom() != null) {
+			if(this.course.getLabRoom() != null && !this.course.getLabRoom().getDescription().equals("NA")) {
 				this.labRooms.add(this.course.getLabRoom());
 				System.out.println("Has default laboraty room: "+this.course.getLabRoom().getDescription());
 			}else {

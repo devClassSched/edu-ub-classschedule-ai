@@ -245,6 +245,7 @@ INSERT INTO `csdb`.`domainvalue`(`description`,`short_description`,`domain_objec
 
 
 -- CLASSROOM
+INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('NA','NA',1);
 INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('Chemical Engineering','Laboratory I',1);
 INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('Chemical Engineering','Laboratory II',1);
 INSERT INTO `csdb`.`classroom`(`description`,`name`,`coursetype`)VALUES('Chemical Engineering','Laboratory III',1);
