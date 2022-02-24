@@ -79,44 +79,71 @@ public class CourseScheduler {
 			allRoom = new ArrayList<>();
 		}		
 	}
+	
+	public boolean hasSchedule() {
+		boolean hasSchedule = true;
+		if(this.course.getLectureHours() > 0 && this.lectureSched.size() == 0) {
+			hasSchedule = false;
+		}
+		if(this.course.getLabHours() > 0  && this.labSched.size() == 0) {
+			hasSchedule = false;
+		}
+		return hasSchedule;
+	}
 	public boolean registerCourse(Course c, Semester sem) throws AlreadySchedForSemesterException{
 		this.course = c;
 		this.semester = sem;
 		boolean courseScheduled = false;
 		
+		//Get All existing schedule for the given semester
 		allSchedule = schedDetailService.findAllBySemester(this.semester);
 		
 		lectureSched = new ArrayList<>();
 		labSched = new ArrayList<>();
 		
+		lectureRooms = new ArrayList<>();
+		labRooms = new ArrayList<>();
+		
+		//Segregate all existing schedule per day
 		schedMapPerDay = SchedulerHelper.getSchedulePerDay(allSchedule);		
-			
+		
+		//find if Course is already scheduled
 		if(SchedulerHelper.isCourseExist(allSchedule, this.course.getId())) {
 			throw new AlreadySchedForSemesterException("Course "+course.getDescription() +" already registered.");
 		}
 		
+		//Create temporary schedule object 
+		//register course and semester
 		tmpSchedule = new Schedule();
 		tmpSchedule.setCourse(this.course);
 		tmpSchedule.setSemester(this.semester);
 		
+		//if has lecture hours
+		//find if there is defualt lecture room		
 		if(this.course.getLectureHours() > 0) {
 			if(this.course.getLectureRoom() != null) {
-				lectureRooms.add(this.course.getLectureRoom());
+				this.lectureRooms.add(this.course.getLectureRoom());
+				System.out.println("Has default lecture room: "+this.course.getLectureRoom().getDescription());
 			}else {
-				lectureRooms = classroomService.getByCategoryByClassroomType(allRoom, this.course.getCategory(), Coursetype.LECTURE);
-			}
-			System.out.println("Getting lecture sched: Rooms: " +this.lectureRooms.size());
+				this.lectureRooms = classroomService.getByCategoryByClassroomType(allRoom, this.course.getCategory(), Coursetype.LECTURE);
+				this.lectureRooms.forEach(System.out::println);
+			}			
 			courseScheduled = generateLectureSched();
 		}
 		System.out.println("Total Lecture hours: "+this.course.getLectureHours());
 		this.getLectureSched().forEach(e -> System.out.println("Lecture: "+e));
+
+		
+		//if has lecture hours
+		//find if there is defualt lecture room
 		if(this.course.getLabHours() > 0) {
 			if(this.course.getLabRoom() != null) {
-				labRooms.add(this.course.getLabRoom());
+				this.labRooms.add(this.course.getLabRoom());
+				System.out.println("Has default laboraty room: "+this.course.getLabRoom().getDescription());
 			}else {
-				labRooms = classroomService.getByCategoryByClassroomType(allRoom, this.course.getCategory(), Coursetype.LABORATORY);
+				this.labRooms = classroomService.getByCategoryByClassroomType(allRoom, this.course.getCategory(), Coursetype.LABORATORY);
+				this.labRooms.forEach(System.out::println);
 			}
-			System.out.println("Getting lab sched : Lab Rooms: " +this.labRooms.size());
 			courseScheduled = generateLabSched();
 		}
 		System.out.println("Total Lab hours: "+this.course.getLabHours());
@@ -126,6 +153,7 @@ public class CourseScheduler {
 	
 	public void registerProf(User p) {
 		if(p != null) {
+			System.out.println("Prof Registered:"+p.getName());
 			this.tmpSchedule.setProfessor(p);
 		}
 	}
@@ -172,6 +200,7 @@ public class CourseScheduler {
 		if(multiDaySched != null || multiDaySched.size() > 0) {
 			this.labSched = multiDaySched;
 			this.allSchedule.addAll(this.labSched);
+			this.labSched.forEach(System.out::println);
 			return true;
 		}
 		return false;
@@ -185,17 +214,9 @@ public class CourseScheduler {
 			if(oneDaySched != null) {
 				multiDaySched.add(oneDaySched);
 			}
-		}else if(hours == 2) {		
-			ScheduleDetail tmpSched = allotOneSpecificDaySched(1,this.lectureRooms,Day.TUESDAY,Coursetype.LECTURE);
-			if(tmpSched != null) {
-				multiDaySched.add(tmpSched);
-				tmpSched = allotOneSpecificDaySched(1,tmpSched.getClassroom(),Day.THURSDAY,Coursetype.LECTURE);
-				if(tmpSched != null) {
-					multiDaySched.add(tmpSched);
-				}else {
-					multiDaySched = new ArrayList<>();
-				}
-			}
+		}else if(hours == 2) {				
+			multiDaySched = alotDay(1,2,this.lectureRooms,Coursetype.LECTURE);
+			
 			if(multiDaySched == null || multiDaySched.size() == 0) {
 				ScheduleDetail oneDaySched = allotOneDaySched(2,this.lectureRooms,Coursetype.LECTURE);
 				if(oneDaySched != null) {
@@ -348,15 +369,49 @@ public class CourseScheduler {
 				}
 			}
 			
+		}else if(hours == 10) {			
+			multiDaySched = new ArrayList<>();
+			ScheduleDetail tmpSched =null;
+			for(Day d : Day.values()) {
+				tmpSched = allotOneSpecificDaySched(5,this.lectureRooms,d,Coursetype.LECTURE);
+				multiDaySched.add(tmpSched);
+				if(multiDaySched.size() > 2) {
+					break;
+				}
+			}
+			if(multiDaySched.size() <= 2) {
+				for(Day d : Day.values()) {
+					tmpSched = allotOneSpecificDaySched(2,this.lectureRooms,d,Coursetype.LECTURE);
+					multiDaySched.add(tmpSched);
+					if(multiDaySched.size() > 5) {
+						break;
+					}
+				}
+			}
+			
 		}
 		if(multiDaySched != null && multiDaySched.size() > 0) {
 			this.lectureSched = multiDaySched;
 			this.allSchedule.addAll(this.lectureSched);
+			this.lectureSched.forEach(System.out::println);
 			return true;
 		}
 		return false;
 	}
-	
+	private List<ScheduleDetail> alotDay(int noOfHours,int noOfDays,List<Classroom> rooms, Coursetype type){
+		List<ScheduleDetail> multiDaySched = new ArrayList<>();
+		ScheduleDetail tmpSched =null;
+		for(Day d : Day.values()) {
+			tmpSched = allotOneSpecificDaySched(noOfHours,rooms,d,type);	
+			if(tmpSched != null) {
+				multiDaySched.add(tmpSched);
+			}
+			if(multiDaySched.size() > noOfDays) {
+				break;
+			}
+		}
+		return multiDaySched;
+	}
 	/*
 	 * Will schedule a given hour in any day of the week
 	 * */
@@ -654,7 +709,9 @@ public class CourseScheduler {
 	private boolean isSameDay(Day d, LocalTime t, double addHours) {
 		List<ScheduleDetail> sd = this.getSchedList();
 		
-		List<ScheduleDetail> days = sd.stream().filter(e -> e.getDay() == d)
+		List<ScheduleDetail> days = sd.stream().filter(e ->{
+				if(e != null) { return e.getDay() == d;
+				}else{return false;}})
 				.collect(Collectors.toList());
 		System.out.print("Checking day "+d +" : Time "+t.toString());
 		

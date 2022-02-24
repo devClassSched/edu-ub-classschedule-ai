@@ -86,7 +86,13 @@ public class SchedulerHelper {
 	 * 
 	 */
 	public static List<ScheduleDetail> getAllSchedulePerRoom(List<ScheduleDetail> source, int roomId){
-		List<ScheduleDetail> tmp = source.stream().filter(e -> e.getClassroom().getId() == roomId).collect(Collectors.toList());
+		List<ScheduleDetail> tmp = source.stream().filter(e -> {
+			if(e!= null) {
+				return e.getClassroom().getId() == roomId;
+			}else{
+				return false;
+			}}) .collect(Collectors.toList());
+			
 		
 		return tmp;
 	}

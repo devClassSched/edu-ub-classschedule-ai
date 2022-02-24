@@ -16,7 +16,7 @@ import edu.ub.classscheduleai.entity.Semester;
 @Repository
 public interface CourseRepository extends JpaRepository<Course,Integer>{
 	
-	@Query("SELECT s FROM courses s where s.semester =: sem")
+	@Query("SELECT s FROM courses s where s.semester = :sem")
 	List<Course> findAllCourseForSemester(Semester sem);
 	
 	@Query("SELECT s FROM courses s join schedule b on  b.semester= s.semester and b.course = s where s.id = :courseId")

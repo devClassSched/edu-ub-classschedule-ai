@@ -48,10 +48,11 @@ public class ProfessorScheduler {
 		if(profList != null && profList.size() > 0 && courseList != null && courseList.size() > 0) {
 			Schedule sched = courseList.get(0).getSchedule();
 			profList = countAllocation(profList, semCourseList);
+			System.out.println("Register Schedule");
+			courseList.forEach(System.out::println);
 			boolean noConflict = false;
 			for(User p : profList) {
-				noConflict = false;
-				
+				noConflict = false;				
 				profSchedule = getProfSched(semCourseList,p);			
 				if(profSchedule != null && profSchedule.size() > 0) {
 					for(ScheduleDetail sd : courseList) {
@@ -59,10 +60,13 @@ public class ProfessorScheduler {
 							continue;
 						}
 						for(ScheduleDetail profD : profSchedule) {
+							if(sd == null) {
+								break;
+							}
 							if(sd.isConflict(profD)) {
 								noConflict = true;
 								continue;
-							}
+							}							
 						}
 					}
 				}
@@ -111,7 +115,8 @@ public class ProfessorScheduler {
 			}
 		}
 		Collections.sort(profList,new SortByAllotedSched());
-		
+		System.out.println("Professor List:");
+		profList.forEach(e -> System.out.println(e.getName() +" Current allocation:"+e.getCurrentcount()));
 		return profList;
 	}
 		

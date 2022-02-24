@@ -87,4 +87,11 @@ public class Classroom {
 	public void setCoursetype(Coursetype coursetype) {
 		this.coursetype = coursetype;
 	}
+
+	@Override
+	public String toString() {
+		return "Classroom [id=" + id + ", name=" + name + ", category=" + category + ", description=" + description
+				+ ", coursetype=" + coursetype + "]";
+	}
+	
 }
