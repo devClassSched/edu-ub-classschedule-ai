@@ -115,10 +115,20 @@ public class ScheduleDetail {
 	
 	public boolean isConflict(ScheduleDetail obj) {
 		if(this.getDay() == obj.getDay()) {
-			if(this.getStartTime().compareTo(obj.getStartTime()) >= 0 && this.getEndTime().compareTo(obj.getStartTime()) <= 0) {
+			if(this.getStartTime().isBefore(obj.getStartTime()) && this.getEndTime().isAfter(obj.getStartTime()) 
+					|| (this.getStartTime().equals(obj.getStartTime()) || this.getEndTime().equals(obj.getStartTime()))) {
 				return true;
 			}
-			if(this.getStartTime().compareTo(obj.getEndTime()) >= 0 && this.getEndTime().compareTo(obj.getEndTime()) <= 0) {
+			if(this.getStartTime().isBefore(obj.getEndTime()) && this.getEndTime().isAfter(obj.getEndTime()) 
+					|| (this.getStartTime().equals(obj.getEndTime()) || this.getEndTime().equals(obj.getEndTime()))) {
+				return true;
+			}
+			if(obj.getStartTime().isBefore(this.getStartTime()) && obj.getEndTime().isAfter(this.getStartTime()) 
+					|| (this.getStartTime().equals(this.getStartTime()) || obj.getEndTime().equals(this.getStartTime()))) {
+				return true;
+			}
+			if(obj.getStartTime().isBefore(this.getEndTime()) && obj.getEndTime().isAfter(this.getEndTime()) 
+					|| (obj.getStartTime().equals(this.getEndTime()) || obj.getEndTime().equals(this.getEndTime()))) {
 				return true;
 			}
 		}
